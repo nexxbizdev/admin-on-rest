@@ -12,10 +12,11 @@ describe('<ReferenceInput />', () => {
         reference: 'posts',
         resource: 'comments',
         source: 'post_id',
+        record: { id: 1 },
     };
     const MyComponent = () => <span id="mycomponent" />;
 
-    it('should not render anything if there is no referenceRecord and allowEmpty is false', () => {
+    it('should not render anything if there is no referenceRecord and allowEmpty is false and record is not empty (edition mode)', () => {
         const wrapper = shallow(
             <ReferenceInput {...defaultProps}>
                 <MyComponent />
@@ -23,6 +24,21 @@ describe('<ReferenceInput />', () => {
         );
         const MyComponentElement = wrapper.find('MyComponent');
         assert.equal(MyComponentElement.length, 0);
+    });
+
+    it('should render component if there is no referenceRecord but record is empty (creation mode)', () => {
+        const wrapper = shallow(
+            <ReferenceInput
+                {...{
+                    ...defaultProps,
+                    record: {},
+                }}
+            >
+                <MyComponent />
+            </ReferenceInput>
+        );
+        const MyComponentElement = wrapper.find('MyComponent');
+        assert.equal(MyComponentElement.length, 1);
     });
 
     it('should not render enclosed component if allowEmpty is true', () => {
