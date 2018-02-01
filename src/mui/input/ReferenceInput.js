@@ -164,8 +164,9 @@ export class ReferenceInput extends Component {
             onChange,
             children,
             meta,
+            record,
         } = this.props;
-        if (!referenceRecord && !allowEmpty) {
+        if (Object.keys(record).length && !referenceRecord && !allowEmpty) {
             return (
                 <Labeled
                     label={
@@ -218,6 +219,7 @@ ReferenceInput.propTypes = {
     meta: PropTypes.object,
     onChange: PropTypes.func,
     perPage: PropTypes.number,
+    record: PropTypes.object,
     reference: PropTypes.string.isRequired,
     referenceRecord: PropTypes.object,
     resource: PropTypes.string.isRequired,
