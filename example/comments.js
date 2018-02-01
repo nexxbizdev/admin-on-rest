@@ -177,19 +177,19 @@ export const CommentEdit = props => (
 );
 
 const defaultValue = { created_at: new Date() };
+const required = value => (value ? undefined : 'Required');
 export const CommentCreate = props => (
     <Create {...props}>
         <SimpleForm defaultValue={defaultValue}>
             <ReferenceInput
                 source="post_id"
                 reference="posts"
-                allowEmpty
-                validation={{ required: true }}
+                validate={[required]}
             >
                 <SelectInput optionText="title" />
             </ReferenceInput>
             <DateInput source="created_at" />
-            <LongTextInput source="body" />
+            <LongTextInput source="body" validate={[required]} />
         </SimpleForm>
     </Create>
 );
