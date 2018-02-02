@@ -56,10 +56,12 @@ describe('List Page', () => {
                 'Omnis voluptate enim similique est possimus'
             );
             await ListPagePosts.setFilterValue('q', '');
+            assert.equal(await ListPagePosts.getNbPagesText(), '1-10 of 13');
         });
 
         it('should display new filter when clicking on "Add Filter"', async () => {
             await ListPagePosts.showFilter('title');
+
             const filters = await driver.findElements(
                 ListPagePosts.elements.filter('title')
             );

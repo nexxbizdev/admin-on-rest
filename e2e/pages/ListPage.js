@@ -142,6 +142,9 @@ export default url => driver => ({
             filterField.clear();
         }
         filterField.sendKeys(value);
+        // For some unknown reason, sending '' to the input does not trigger onChange
+        // The next line forces a blur on it
+        driver.findElement(this.elements.title).click();
         driver.sleep(500);
         return this.waitUntilDataLoaded();
     },
