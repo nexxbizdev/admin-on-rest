@@ -13,8 +13,7 @@ import { USER_LOGOUT } from './actions/authActions';
 
 import createAppReducer from './reducer';
 import { crudSaga } from './sideEffect/saga';
-import DefaultLayout from './mui/layout/Layout';
-import Menu from './mui/layout/Menu';
+import AdminRoutes from './AdminRoutes';
 import Login from './mui/auth/Login';
 import Logout from './mui/auth/Logout';
 import { TranslationProvider, defaultI18nProvider } from './i18n';
@@ -28,7 +27,7 @@ const Admin = ({
     customRoutes = [],
     dashboard,
     history,
-    menu = Menu,
+    menu,
     catchAll,
     dataProvider,
     i18nProvider = defaultI18nProvider,
@@ -72,61 +71,35 @@ const Admin = ({
         <Provider store={store}>
             <TranslationProvider>
                 <ConnectedRouter history={routerHistory}>
-                    <div>
-                        <Switch>
-                            <Route
-                                exact
-                                path="/login"
-                                render={props =>
-                                    createElement(loginPage || Login, {
-                                        ...props,
-                                        title,
-                                    })}
-                            />
-                            {customRoutes
-                                .filter(route => route.props.noLayout)
-                                .map((route, index) => (
-                                    <Route
-                                        key={index}
-                                        exact={route.props.exact}
-                                        path={route.props.path}
-                                        render={props => {
-                                            if (route.props.render) {
-                                                return route.props.render({
-                                                    ...props,
-                                                    title,
-                                                });
-                                            }
-                                            if (route.props.component) {
-                                                return createElement(
-                                                    route.props.component,
-                                                    {
-                                                        ...props,
-                                                        title,
-                                                    }
-                                                );
-                                            }
-                                        }}
-                                    />
-                                ))}
-                            <Route
-                                path="/"
-                                render={() =>
-                                    createElement(appLayout || DefaultLayout, {
-                                        children,
-                                        dashboard,
-                                        customRoutes: customRoutes.filter(
-                                            route => !route.props.noLayout
-                                        ),
-                                        logout,
-                                        menu,
-                                        catchAll,
-                                        theme,
-                                        title,
-                                    })}
-                            />
-                        </Switch>
-                    </div>
+                    <Switch>
+                        <Route
+                            exact
+                            path="/login"
+                            render={props =>
+                                createElement(loginPage || Login, {
+                                    ...props,
+                                    title,
+                                })}
+                        />
+                        <Route
+                            path="/"
+                            render={routeProps => (
+                                <AdminRoutes
+                                    appLayout={appLayout}
+                                    catchAll={catchAll}
+                                    customRoutes={customRoutes}
+                                    dashboard={dashboard}
+                                    logout={logout}
+                                    menu={menu}
+                                    theme={theme}
+                                    title={title}
+                                    {...routeProps}
+                                >
+                                    {children}
+                                </AdminRoutes>
+                            )}
+                        />
+                    </Switch>
                 </ConnectedRouter>
             </TranslationProvider>
         </Provider>
@@ -157,6 +130,10 @@ Admin.propTypes = {
     title: PropTypes.node,
     locale: PropTypes.string,
     initialState: PropTypes.object,
+};
+
+Admin.defaultProps = {
+    loginPage: Login,
 };
 
 export default withContext(

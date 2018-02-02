@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 
 import { Admin, Resource, Delete } from 'react-admin'; // eslint-disable-line import/no-unresolved
 import jsonRestDataProvider from 'ra-data-fakerest';
+import { Route } from 'react-router';
 
 import addUploadFeature from './addUploadFeature';
 
@@ -17,6 +18,8 @@ import {
     CommentIcon,
 } from './comments';
 import { UserList, UserEdit, UserCreate, UserIcon, UserShow } from './users';
+import CustomRouteNoLayout from './customRouteNoLayout';
+import CustomRouteLayout from './customRouteLayout';
 
 import data from './data';
 import authClient from './authClient';
@@ -39,6 +42,15 @@ render(
         i18nProvider={i18nProvider}
         title="Example Admin"
         locale="en"
+        customRoutes={[
+            <Route
+                exact
+                path="/custom"
+                component={CustomRouteNoLayout}
+                noLayout
+            />,
+            <Route exact path="/custom2" component={CustomRouteLayout} />,
+        ]}
     >
         {permissions => [
             <Resource

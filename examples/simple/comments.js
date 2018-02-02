@@ -179,6 +179,7 @@ export const CommentList = ({ ...props }) => (
     </List>
 );
 
+const min10Length = minLength(10);
 export const CommentEdit = ({ ...props }) => (
     <Edit {...props}>
         <SimpleForm>
@@ -191,16 +192,18 @@ export const CommentEdit = ({ ...props }) => (
             >
                 <AutocompleteInput optionText="title" />
             </ReferenceInput>
-            <TextInput source="author.name" validate={minLength(10)} />
+            <TextInput source="author.name" validate={min10Length} />
             <DateInput source="created_at" />
-            <LongTextInput source="body" validate={minLength(10)} />
+            <LongTextInput source="body" validate={min10Length} />
         </SimpleForm>
     </Edit>
 );
 
+const defaultValue = { created_at: new Date() };
+
 export const CommentCreate = ({ ...props }) => (
     <Create {...props}>
-        <SimpleForm defaultValue={{ created_at: new Date() }}>
+        <SimpleForm defaultValue={defaultValue}>
             <ReferenceInput
                 source="post_id"
                 reference="posts"

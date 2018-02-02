@@ -1,9 +1,9 @@
 import assert from 'assert';
 import reducer from './index';
-import { REGISTER_RESOURCE, UNREGISTER_RESOURCE } from '../../../actions';
+import { DECLARE_RESOURCES } from '../../../actions';
 
 describe('Resources Reducer', () => {
-    it('should return previous state if the action has no resource meta and is not REGISTER_RESOURCE nor UNREGISTER_RESOURCE', () => {
+    it('should return previous state if the action has no resource meta and is not DECLARE_RESOURCES', () => {
         const previousState = { previous: true };
         assert.deepEqual(
             reducer(previousState, { type: 'A_TYPE', meta: { foo: 'bar' } }),
@@ -11,31 +11,20 @@ describe('Resources Reducer', () => {
         );
     });
 
-    it('should initialize a new resource upon REGISTER_RESOURCE', () => {
+    it('should initialize resources upon DECLARE_RESOURCES', () => {
+        const resources = [
+            { name: 'posts', hasList: true },
+            { name: 'comments', hasCreate: true },
+            { name: 'users', hasEdit: true },
+        ];
+
         const dataReducer = () => () => 'data_data';
         const listReducer = () => () => 'list_data';
 
         assert.deepEqual(
             reducer(
-                {
-                    posts: {
-                        data: 'data_data',
-                        list: 'list_data',
-                        props: { name: 'posts' },
-                    },
-                    comments: {
-                        data: 'data_data',
-                        list: 'list_data',
-                        props: { name: 'comments' },
-                    },
-                },
-                {
-                    type: REGISTER_RESOURCE,
-                    payload: {
-                        name: 'users',
-                        options: 'foo',
-                    },
-                },
+                { oldResource: {} },
+                { type: DECLARE_RESOURCES, payload: resources },
                 dataReducer,
                 listReducer
             ),
@@ -43,52 +32,17 @@ describe('Resources Reducer', () => {
                 posts: {
                     data: 'data_data',
                     list: 'list_data',
-                    props: { name: 'posts' },
+                    props: { name: 'posts', hasList: true },
                 },
                 comments: {
                     data: 'data_data',
                     list: 'list_data',
-                    props: { name: 'comments' },
+                    props: { name: 'comments', hasCreate: true },
                 },
                 users: {
                     data: 'data_data',
                     list: 'list_data',
-                    props: { name: 'users', options: 'foo' },
-                },
-            }
-        );
-    });
-
-    it('should remove a resource upon UNREGISTER_RESOURCE', () => {
-        const dataReducer = () => () => 'data_data';
-        const listReducer = () => () => 'list_data';
-
-        assert.deepEqual(
-            reducer(
-                {
-                    posts: {
-                        data: 'data_data',
-                        list: 'list_data',
-                        props: { name: 'posts' },
-                    },
-                    comments: {
-                        data: 'data_data',
-                        list: 'list_data',
-                        props: { name: 'comments' },
-                    },
-                },
-                {
-                    type: UNREGISTER_RESOURCE,
-                    payload: 'comments',
-                },
-                dataReducer,
-                listReducer
-            ),
-            {
-                posts: {
-                    data: 'data_data',
-                    list: 'list_data',
-                    props: { name: 'posts' },
+                    props: { name: 'users', hasEdit: true },
                 },
             }
         );

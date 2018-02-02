@@ -41,6 +41,7 @@ const sanitizeRestProps = ({
     location,
     title,
     array,
+    staticContext,
     theme,
     ...rest
 }) => rest;
