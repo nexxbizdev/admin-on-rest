@@ -19,6 +19,7 @@ export default url => driver => ({
         datagridHeaders: By.css('th'),
         title: By.css('.title'),
         logout: By.css('.logout'),
+        body: By.css('body'),
     },
 
     navigate() {
@@ -143,8 +144,9 @@ export default url => driver => ({
         }
         filterField.sendKeys(value);
         // For some unknown reason, sending '' to the input does not trigger onChange
-        // The next line forces a blur on it
-        driver.findElement(this.elements.title).click();
+        // The next line forces a blur on it, clicking on body
+        // (using body ensure we don't try to click on a unreachable element depending on resolution)
+        driver.findElement(this.elements.body).click();
         driver.sleep(500);
         return this.waitUntilDataLoaded();
     },
